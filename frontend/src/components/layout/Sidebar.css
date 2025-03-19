@@ -1,0 +1,180 @@
+.sidebar {
+  width: 250px;
+  height: calc(100vh - 80px);
+  background-color: #ffffff;
+  position: fixed;
+  left: 0;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+/* Wallet summary section */
+.wallet-summary {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.wallet-balance {
+  margin-bottom: 15px;
+}
+
+.balance-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+.balance-amount {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.currency-symbol {
+  font-size: 1rem;
+  margin-right: 2px;
+  color: var(--text-secondary);
+}
+
+.wallet-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-button {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 5px;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.action-button i {
+  margin-right: 5px;
+}
+
+.deposit {
+  background-color: var(--primary-light);
+  color: white;
+}
+
+.deposit:hover {
+  background-color: var(--primary-color);
+}
+
+.withdraw {
+  background-color: var(--secondary-light);
+  color: white;
+}
+
+.withdraw:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Menu container */
+.menu-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  margin-bottom: 5px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.menu-link:hover {
+  background-color: rgba(46, 125, 50, 0.05);
+  color: var(--primary-color);
+}
+
+.menu-item.active .menu-link {
+  background-color: rgba(46, 125, 50, 0.1);
+  color: var(--primary-color);
+  border-left: 3px solid var(--primary-color);
+}
+
+.menu-icon {
+  margin-right: 15px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-title {
+  font-weight: 500;
+}
+
+/* Sidebar footer with carbon impact */
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  background-color: rgba(76, 175, 80, 0.05);
+}
+
+.carbon-impact {
+  text-align: center;
+}
+
+.impact-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+.impact-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.impact-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-right: 5px;
+}
+
+.impact-unit {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.impact-description {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
