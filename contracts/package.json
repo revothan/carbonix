@@ -9,10 +9,10 @@
     "deploy": "echo \"Deploying contracts\" && exit 0"
   },
   "dependencies": {
-    "@liskhq/lisk-client": "^6.0.0",
-    "@liskhq/lisk-transactions": "^6.0.0"
+    "@liskhq/lisk-client": "^5.2.0",
+    "@liskhq/lisk-transactions": "^5.2.0"
   },
   "devDependencies": {
-    "@liskhq/lisk-framework": "^0.10.0"
+    "@liskhq/lisk-framework-chain": "^0.4.0"
   }
 }
