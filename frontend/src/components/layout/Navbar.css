@@ -1,0 +1,246 @@
+.navbar {
+  background-color: #ffffff;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1500px;
+  padding: 0 20px;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logo-icon {
+  margin-right: 10px;
+}
+
+.logo-text {
+  color: var(--text-color);
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+}
+
+.nav-item {
+  height: 80px;
+  position: relative;
+}
+
+.nav-links {
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 1rem;
+  height: 100%;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-links:hover {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.signup-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 5px;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
+
+.signup-button:hover {
+  background-color: var(--primary-dark);
+  color: white;
+  border-bottom: none;
+}
+
+.menu-icon {
+  display: none;
+}
+
+/* User profile dropdown */
+.user-profile {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 80px;
+  background-color: #ffffff;
+  min-width: 250px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.user-profile:hover .dropdown-content {
+  display: block;
+}
+
+.user-info {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.user-name {
+  display: block;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 5px;
+}
+
+.user-address {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.dropdown-item {
+  display: block;
+  padding: 15px;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+  color: var(--primary-color);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.logout-button {
+  color: var(--error-color);
+}
+
+/* Responsive styles */
+@media screen and (max-width: 960px) {
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+    top: 80px;
+    left: -100%;
+    opacity: 1;
+    transition: all 0.5s ease;
+    background-color: white;
+  }
+
+  .nav-menu.active {
+    left: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+
+  .nav-item {
+    height: auto;
+    margin: 1.5rem 0;
+  }
+
+  .nav-links {
+    padding: 1.5rem;
+    width: 100%;
+    display: table;
+    text-align: center;
+  }
+
+  .nav-links:hover {
+    border-bottom: none;
+    background-color: #f5f5f5;
+  }
+
+  .signup-button {
+    display: block;
+    text-align: center;
+    width: 80%;
+    margin: 1.5rem auto;
+    padding: 14px 20px;
+    border-radius: 5px;
+  }
+
+  .menu-icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-100%, 60%);
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+
+  .user-profile {
+    margin: 1.5rem 0;
+  }
+
+  .dropdown-content {
+    position: static;
+    box-shadow: none;
+    width: 100%;
+  }
+
+  .user-profile:hover .dropdown-content {
+    display: none;
+  }
+
+  .user-profile.active .dropdown-content {
+    display: block;
+  }
+}
