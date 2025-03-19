@@ -6,7 +6,9 @@
   "scripts": {
     "blockchain:dev": "echo \"Start local Lisk blockchain\" && exit 0",
     "deploy:local": "echo \"Deploy contracts to local network\" && exit 0",
-    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:dev": "cd frontend && npm run start",
+    "contracts:dev": "cd contracts && npm run build",
+    "dev": "concurrently \"npm run blockchain:dev\" \"npm run frontend:dev\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "install:all": "npm install && cd contracts && npm install && cd ../frontend && npm install"
   },
