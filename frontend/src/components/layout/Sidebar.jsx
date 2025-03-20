@@ -4,7 +4,6 @@ import { BarChart2, ShoppingCart, Leaf, PlusCircle, Award, CheckCircle, Globe, W
 
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 const Sidebar = ({ user }) => {
