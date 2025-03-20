@@ -6,7 +6,7 @@
   "scripts": {
     "blockchain:dev": "echo \"Start local Lisk blockchain\" && exit 0",
     "deploy:local": "echo \"Deploy contracts to local network\" && exit 0",
-    "frontend:dev": "cd frontend && npm run start",
+    "frontend:dev": "cd frontend && npm run dev",
     "contracts:dev": "cd contracts && npm run build",
     "dev": "concurrently \"npm run blockchain:dev\" \"npm run frontend:dev\"",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -32,6 +32,6 @@
   },
   "homepage": "https://github.com/revothan/carbonix#readme",
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.2"
   }
 }
