@@ -1,9 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { 
+  Filter, 
+  Search, 
+  CalendarClock, 
+  GeoPin, 
+  Check, 
+  Tag 
+} from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { formatCurrency } from "@/lib/utils";
 
 const Marketplace = ({ user }) => {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     projectType: "all",
     country: "all",
@@ -11,6 +34,7 @@ const Marketplace = ({ user }) => {
     vintage: "all",
     standard: "all",
   });
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -82,25 +106,44 @@ const Marketplace = ({ user }) => {
   }, []);
 
   const applyFilters = (listing) => {
+    // Search filter
+    if (
+      searchQuery &&
+      !listing.projectName.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !listing.region.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Type filter
     if (
       filters.projectType !== "all" &&
       listing.projectType !== filters.projectType
     )
       return false;
+    
+    // Country filter
     if (filters.country !== "all" && listing.country !== filters.country)
       return false;
+    
+    // Price filter
     if (
       listing.pricePerUnit < filters.priceRange[0] ||
       listing.pricePerUnit > filters.priceRange[1]
     )
       return false;
+    
+    // Vintage filter
     if (
       filters.vintage !== "all" &&
       listing.vintage.toString() !== filters.vintage
     )
       return false;
+    
+    // Standard filter
     if (filters.standard !== "all" && listing.standard !== filters.standard)
       return false;
+    
     return true;
   };
 
@@ -113,124 +156,251 @@ const Marketplace = ({ user }) => {
     }));
   };
 
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
+  const formatProjectType = (type) => {
+    return type.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  };
+
   if (loading) {
-    return <div className="loading">Loading marketplace listings...</div>;
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="spinner"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="marketplace-container">
-      <div className="marketplace-header">
-        <h1>Carbon Credit Marketplace</h1>
-        <p>
-          Browse and purchase verified carbon credits from projects across
-          Indonesia
-        </p>
-      </div>
-
-      <div className="marketplace-content">
-        <div className="filters-sidebar">
-          <h3>Filters</h3>
-
-          <div className="filter-group">
-            <label>Project Type</label>
-            <select
-              value={filters.projectType}
-              onChange={(e) =>
-                handleFilterChange("projectType", e.target.value)
-              }
-            >
-              <option value="all">All Types</option>
-              <option value="forest_conservation">Forest Conservation</option>
-              <option value="renewable_energy">Renewable Energy</option>
-              <option value="blue_carbon">Blue Carbon</option>
-            </select>
+    <div className="container mx-auto px-4 py-6 max-w-7xl">
+      <div className="flex flex-col space-y-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight mb-1">Carbon Credit Marketplace</h1>
+            <p className="text-muted-foreground">
+              Browse and purchase verified carbon credits from projects across Indonesia
+            </p>
           </div>
-
-          <div className="filter-group">
-            <label>Country</label>
-            <select
-              value={filters.country}
-              onChange={(e) => handleFilterChange("country", e.target.value)}
-            >
-              <option value="all">All Countries</option>
-              <option value="Indonesia">Indonesia</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label>Vintage</label>
-            <select
-              value={filters.vintage}
-              onChange={(e) => handleFilterChange("vintage", e.target.value)}
-            >
-              <option value="all">All Years</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
-              <option value="2021">2021</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label>Standard</label>
-            <select
-              value={filters.standard}
-              onChange={(e) => handleFilterChange("standard", e.target.value)}
-            >
-              <option value="all">All Standards</option>
-              <option value="VCS">VCS</option>
-              <option value="Gold Standard">Gold Standard</option>
-              <option value="CDM">CDM</option>
-            </select>
+          
+          <div className="w-full md:w-auto">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search projects or regions..."
+                className="pl-9 w-full md:w-64"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="listings-grid">
-          {filteredListings.length > 0 ? (
-            filteredListings.map((listing) => (
-              <div className="listing-card" key={listing.id}>
-                <div className="listing-image">
-                  <img src={listing.imageUrl} alt={listing.projectName} />
+        <div className="md:hidden">
+          <Button 
+            variant="outline" 
+            onClick={toggleFilters} 
+            className="w-full"
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            {showFilters ? "Hide Filters" : "Show Filters"}
+          </Button>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Filters - Mobile collapsible, desktop always visible */}
+          <div className={`
+            ${showFilters ? 'block' : 'hidden'} 
+            md:block w-full md:w-64 shrink-0
+          `}>
+            <Card>
+              <CardContent className="p-4 md:p-6 space-y-4">
+                <div className="space-y-1.5">
+                  <h3 className="font-medium">Filters</h3>
+                  <Separator />
                 </div>
-                <div className="listing-content">
-                  <h3>{listing.projectName}</h3>
-                  <p className="listing-type">
-                    {listing.projectType.replace("_", " ")} | {listing.standard}
-                  </p>
-                  <p className="listing-location">
-                    {listing.region}, {listing.country}
-                  </p>
-                  <p className="listing-vintage">Vintage: {listing.vintage}</p>
-                  <div className="listing-footer">
-                    <div className="listing-price">
-                      <span className="price-label">Price per tonne:</span>
-                      <span className="price-value">
-                        Rp {listing.pricePerUnit.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="listing-quantity">
-                      <span className="quantity-label">Available:</span>
-                      <span className="quantity-value">
-                        {listing.quantity} tonnes
-                      </span>
-                    </div>
+                
+                <div className="space-y-3">
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium" htmlFor="project-type">
+                      Project Type
+                    </label>
+                    <Select
+                      value={filters.projectType}
+                      onValueChange={(value) => handleFilterChange("projectType", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="All Types" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        <SelectItem value="forest_conservation">Forest Conservation</SelectItem>
+                        <SelectItem value="renewable_energy">Renewable Energy</SelectItem>
+                        <SelectItem value="blue_carbon">Blue Carbon</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <Link
-                    to={`/credits/${listing.creditId}`}
-                    className="btn btn-primary"
-                  >
-                    View Details
-                  </Link>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium" htmlFor="country">
+                      Country
+                    </label>
+                    <Select
+                      value={filters.country}
+                      onValueChange={(value) => handleFilterChange("country", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="All Countries" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Countries</SelectItem>
+                        <SelectItem value="Indonesia">Indonesia</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium" htmlFor="vintage">
+                      Vintage
+                    </label>
+                    <Select
+                      value={filters.vintage}
+                      onValueChange={(value) => handleFilterChange("vintage", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="All Years" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Years</SelectItem>
+                        <SelectItem value="2023">2023</SelectItem>
+                        <SelectItem value="2022">2022</SelectItem>
+                        <SelectItem value="2021">2021</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium" htmlFor="standard">
+                      Standard
+                    </label>
+                    <Select
+                      value={filters.standard}
+                      onValueChange={(value) => handleFilterChange("standard", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="All Standards" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Standards</SelectItem>
+                        <SelectItem value="VCS">Verified Carbon Standard (VCS)</SelectItem>
+                        <SelectItem value="Gold Standard">Gold Standard</SelectItem>
+                        <SelectItem value="CDM">Clean Development Mechanism</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
+                
+                <div className="pt-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => setFilters({
+                      projectType: "all",
+                      country: "all",
+                      priceRange: [0, 1000000],
+                      vintage: "all",
+                      standard: "all",
+                    })}
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Listings Grid */}
+          <div className="flex-1">
+            {filteredListings.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredListings.map((listing) => (
+                  <Card key={listing.id} className="overflow-hidden h-full flex flex-col">
+                    <div className="aspect-video w-full overflow-hidden bg-muted">
+                      <img
+                        src={listing.imageUrl}
+                        alt={listing.projectName}
+                        className="h-full w-full object-cover transition-all hover:scale-105"
+                      />
+                    </div>
+                    <CardContent className="p-4 md:p-6 flex flex-col flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="secondary" className="px-2 py-0">
+                          {formatProjectType(listing.projectType)}
+                        </Badge>
+                        <Badge variant="outline" className="px-2 py-0">
+                          {listing.standard}
+                        </Badge>
+                      </div>
+
+                      <h3 className="font-semibold text-lg mb-1 line-clamp-2">{listing.projectName}</h3>
+                      
+                      <div className="flex items-center text-sm text-muted-foreground mb-2">
+                        <GeoPin className="h-3.5 w-3.5 mr-1 opacity-70" />
+                        <span>{listing.region}, {listing.country}</span>
+                      </div>
+                      
+                      <div className="flex items-center text-sm text-muted-foreground mb-3">
+                        <CalendarClock className="h-3.5 w-3.5 mr-1 opacity-70" />
+                        <span>Vintage {listing.vintage}</span>
+                      </div>
+
+                      <div className="mt-auto space-y-3 pt-3">
+                        <div className="flex justify-between items-center">
+                          <div className="space-y-1">
+                            <p className="text-xs text-muted-foreground">Price per tonne</p>
+                            <div className="font-semibold">
+                              {formatCurrency(listing.pricePerUnit)}
+                            </div>
+                          </div>
+                          <div className="text-right space-y-1">
+                            <p className="text-xs text-muted-foreground">Available</p>
+                            <div className="font-medium">
+                              {listing.quantity.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">tonnes</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="pt-2">
+                          <Link 
+                            to={`/credits/${listing.creditId}`}
+                          >
+                            <Button className="w-full">
+                              View Details
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
-            ))
-          ) : (
-            <div className="no-results">
-              <p>
-                No listings match your current filters. Try adjusting your
-                criteria.
-              </p>
-            </div>
-          )}
+            ) : (
+              <Card className="p-8 text-center">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="rounded-full bg-muted p-3">
+                    <Filter className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold mt-2">No listings found</h3>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    No listings match your current filters. Try adjusting your criteria or check back later for new listings.
+                  </p>
+                </div>
+              </Card>
+            )}
+          </div>
         </div>
       </div>
     </div>
