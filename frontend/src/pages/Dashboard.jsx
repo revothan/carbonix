@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency } from '../lib/utils';  // Fixed import path
 import { BarChart, LineChart, CircleDollarSign, Leaf, TrendingUp } from 'lucide-react';
 
 import {
