@@ -423,3 +423,6 @@ const Register = ({ onRegister }) => {
       </div>
     </div>
   );
+};
+
+export default Register;
