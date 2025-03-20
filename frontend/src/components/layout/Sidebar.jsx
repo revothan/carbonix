@@ -1,55 +1,51 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart2, ShoppingCart, Leaf, PlusCircle, Award, CheckCircle, Globe, Wallet, ArrowDown, ArrowUp } from 'lucide-react';
-
-import { cn, formatCurrency } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import './Sidebar.css';
 
 const Sidebar = ({ user }) => {
   const location = useLocation();
 
-  // Define sidebar menu items with Lucide icons
+  // Define sidebar menu items
   const menuItems = [
     {
       title: 'Dashboard',
       path: '/',
-      icon: <BarChart2 className="h-5 w-5" />,
+      icon: <i className="fas fa-chart-line"></i>,
     },
     {
       title: 'Marketplace',
       path: '/marketplace',
-      icon: <ShoppingCart className="h-5 w-5" />,
+      icon: <i className="fas fa-shopping-cart"></i>,
     },
     {
       title: 'My Portfolio',
       path: '/portfolio',
-      icon: <Leaf className="h-5 w-5" />,
+      icon: <i className="fas fa-leaf"></i>,
     },
     {
       title: 'Create Listing',
       path: '/create-listing',
-      icon: <PlusCircle className="h-5 w-5" />,
+      icon: <i className="fas fa-plus-circle"></i>,
     },
     {
       title: 'Retire Credits',
       path: '/retire',
-      icon: <Award className="h-5 w-5" />,
+      icon: <i className="fas fa-certificate"></i>,
     },
     {
       title: 'Verification',
       path: '/verification',
-      icon: <CheckCircle className="h-5 w-5" />,
+      icon: <i className="fas fa-check-circle"></i>,
     },
     {
       title: 'Impact Dashboard',
       path: '/impact',
-      icon: <Globe className="h-5 w-5" />,
+      icon: <i className="fas fa-globe-asia"></i>,
     },
     {
       title: 'Wallet',
       path: '/wallet',
-      icon: <Wallet className="h-5 w-5" />,
+      icon: <i className="fas fa-wallet"></i>,
     },
   ];
 
@@ -59,63 +55,47 @@ const Sidebar = ({ user }) => {
   };
 
   return (
-    <div className="hidden w-64 flex-col md:flex fixed inset-y-0 z-30 pt-16">
-      <div className="flex h-full flex-col border-r bg-background">
-        {/* Wallet summary section */}
-        <div className="p-4 border-b">
-          <div className="mb-3">
-            <p className="text-xs text-muted-foreground">IDRX Balance</p>
-            <p className="text-2xl font-semibold">
-              {formatCurrency(parseFloat(user.balance) || 0, 'IDR')}
-            </p>
-          </div>
-          
-          <div className="flex space-x-2">
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              className="flex-1"
-            >
-              <ArrowDown className="h-4 w-4 mr-1" /> Deposit
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1"
-            >
-              <ArrowUp className="h-4 w-4 mr-1" /> Withdraw
-            </Button>
+    <div className="sidebar">
+      <div className="wallet-summary">
+        <div className="wallet-balance">
+          <div className="balance-label">IDRX Balance</div>
+          <div className="balance-amount">
+            <span className="currency-symbol">Rp</span>
+            <span className="amount">{user.balance || '0.00'}</span>
           </div>
         </div>
+        <div className="wallet-actions">
+          <button className="action-button deposit">
+            <i className="fas fa-arrow-down"></i> Deposit
+          </button>
+          <button className="action-button withdraw">
+            <i className="fas fa-arrow-up"></i> Withdraw
+          </button>
+        </div>
+      </div>
 
-        {/* Menu container */}
-        <div className="flex-1 overflow-auto py-2">
-          <nav className="grid gap-1 px-2">
-            {menuItems.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                  isActive(item.path) && "bg-accent text-accent-foreground"
-                )}
-              >
-                {item.icon}
-                <span>{item.title}</span>
+      <div className="menu-container">
+        <ul className="sidebar-menu">
+          {menuItems.map((item, index) => (
+            <li key={index} className={`menu-item ${isActive(item.path) ? 'active' : ''}`}>
+              <Link to={item.path} className="menu-link">
+                <span className="menu-icon">{item.icon}</span>
+                <span className="menu-title">{item.title}</span>
               </Link>
-            ))}
-          </nav>
-        </div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-        {/* Carbon impact section */}
-        <div className="p-4 border-t">
-          <div className="text-center">
-            <p className="text-xs text-muted-foreground mb-1">Your Carbon Impact</p>
-            <div className="flex items-center justify-center mb-1">
-              <p className="text-2xl font-bold text-primary mr-1">{user.carbonOffset || '0'}</p>
-              <p className="text-sm text-muted-foreground">tonnes CO₂</p>
-            </div>
-            <p className="text-xs text-muted-foreground">offset through Carbonix</p>
+      <div className="sidebar-footer">
+        <div className="carbon-impact">
+          <div className="impact-label">Your Carbon Impact</div>
+          <div className="impact-value">
+            <span className="impact-number">{user.carbonOffset || '0'}</span>
+            <span className="impact-unit">tonnes CO₂</span>
+          </div>
+          <div className="impact-description">
+            offset through Carbonix
           </div>
         </div>
       </div>
