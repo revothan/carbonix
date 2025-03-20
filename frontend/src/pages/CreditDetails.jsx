@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { formatCurrency } from "@/lib/utils";
-import { MapPin, CalendarClock, Certificate, Shield, Globe, ArrowLeft } from "lucide-react";
+import { MapPin, CalendarClock, Award, Shield, Globe, ArrowLeft } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -273,7 +273,7 @@ const CreditDetails = ({ user }) => {
                       <span>Vintage: {credit.vintage}</span>
                     </div>
                     <div className="flex items-center">
-                      <Certificate className="h-4 w-4 mr-2 text-muted-foreground" />
+                      <Award className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span>Standard: {credit.standard}</span>
                     </div>
                   </div>
