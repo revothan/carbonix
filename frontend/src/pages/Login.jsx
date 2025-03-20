@@ -178,18 +178,18 @@ const Login = ({ onLogin }) => {
                     onClick={() => handleSocialLogin('facebook')}
                     disabled={loading}
                   >
-                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2" />
+                    <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                      <path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
                     </svg>
                     Continue with Facebook
                   </Button>
                   <Button 
-                    className="w-full bg-black hover:bg-black/90" 
+                    className="w-full bg-[#000000] hover:bg-[#000000]/90" 
                     onClick={() => handleSocialLogin('twitter')}
                     disabled={loading}
                   >
-                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" fill="white" />
+                    <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                     Continue with Twitter
                   </Button>
@@ -200,7 +200,7 @@ const Login = ({ onLogin }) => {
           <CardFooter className="flex flex-col space-y-4">
             <Separator />
             <div className="text-center text-sm">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <Link to="/register" className="text-primary hover:underline">
                 Sign up
               </Link>
