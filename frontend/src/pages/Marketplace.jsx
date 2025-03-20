@@ -4,7 +4,7 @@ import {
   Filter, 
   Search, 
   CalendarClock, 
-  GeoPin, 
+  MapPin, 
   Check, 
   Tag 
 } from "lucide-react";
@@ -348,7 +348,7 @@ const Marketplace = ({ user }) => {
                       <h3 className="font-semibold text-lg mb-1 line-clamp-2">{listing.projectName}</h3>
                       
                       <div className="flex items-center text-sm text-muted-foreground mb-2">
-                        <GeoPin className="h-3.5 w-3.5 mr-1 opacity-70" />
+                        <MapPin className="h-3.5 w-3.5 mr-1 opacity-70" />
                         <span>{listing.region}, {listing.country}</span>
                       </div>
                       
