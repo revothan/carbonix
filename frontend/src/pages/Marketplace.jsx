@@ -6,7 +6,11 @@ import {
   CalendarClock, 
   MapPin, 
   Check, 
-  Tag 
+  Tag,
+  Image as ImageIcon,
+  Leaf,
+  Sun,
+  Waves
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,6 +39,7 @@ const Marketplace = ({ user }) => {
     standard: "all",
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [imageErrors, setImageErrors] = useState({});
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -56,7 +61,8 @@ const Marketplace = ({ user }) => {
             pricePerUnit: 15000, // in IDRX (equivalent to IDR)
             totalPrice: 7500000,
             status: "active",
-            imageUrl: "https://via.placeholder.com/150?text=Forest",
+            imageUrl: "https://placehold.co/800x400/2e7d32/FFFFFF?text=Forest+Conservation",
+            color: "#2e7d32" // Forest green
           },
           {
             id: "list-002",
@@ -73,7 +79,8 @@ const Marketplace = ({ user }) => {
             pricePerUnit: 12000,
             totalPrice: 2400000,
             status: "active",
-            imageUrl: "https://via.placeholder.com/150?text=Solar",
+            imageUrl: "https://placehold.co/800x400/ff9800/FFFFFF?text=Solar+Energy",
+            color: "#ff9800" // Orange/amber
           },
           {
             id: "list-003",
@@ -90,7 +97,8 @@ const Marketplace = ({ user }) => {
             pricePerUnit: 18000,
             totalPrice: 6300000,
             status: "active",
-            imageUrl: "https://via.placeholder.com/150?text=Mangrove",
+            imageUrl: "https://placehold.co/800x400/0288d1/FFFFFF?text=Mangrove+Restoration",
+            color: "#0288d1" // Blue
           },
         ];
 
@@ -104,6 +112,26 @@ const Marketplace = ({ user }) => {
 
     fetchListings();
   }, []);
+
+  const handleImageError = (listingId) => {
+    setImageErrors(prev => ({
+      ...prev,
+      [listingId]: true
+    }));
+  };
+
+  const getProjectIcon = (projectType) => {
+    switch (projectType) {
+      case 'forest_conservation':
+        return <Leaf className="h-12 w-12 text-white opacity-90" />;
+      case 'renewable_energy':
+        return <Sun className="h-12 w-12 text-white opacity-90" />;
+      case 'blue_carbon':
+        return <Waves className="h-12 w-12 text-white opacity-90" />;
+      default:
+        return <ImageIcon className="h-12 w-12 text-white opacity-90" />;
+    }
+  };
 
   const applyFilters = (listing) => {
     // Search filter
@@ -329,11 +357,21 @@ const Marketplace = ({ user }) => {
                 {filteredListings.map((listing) => (
                   <Card key={listing.id} className="overflow-hidden h-full flex flex-col">
                     <div className="aspect-video w-full overflow-hidden bg-muted">
-                      <img
-                        src={listing.imageUrl}
-                        alt={listing.projectName}
-                        className="h-full w-full object-cover transition-all hover:scale-105"
-                      />
+                      {imageErrors[listing.id] ? (
+                        <div 
+                          className="w-full h-full flex justify-center items-center" 
+                          style={{ backgroundColor: listing.color || '#2e7d32' }}
+                        >
+                          {getProjectIcon(listing.projectType)}
+                        </div>
+                      ) : (
+                        <img
+                          src={listing.imageUrl}
+                          alt={listing.projectName}
+                          className="h-full w-full object-cover transition-all hover:scale-105"
+                          onError={() => handleImageError(listing.id)}
+                        />
+                      )}
                     </div>
                     <CardContent className="p-4 md:p-6 flex flex-col flex-1">
                       <div className="flex items-center gap-2 mb-2">
