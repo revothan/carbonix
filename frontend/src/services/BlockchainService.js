@@ -13,8 +13,7 @@ class BlockchainService {
   constructor() {
     this.client = null;
     this.initialized = false;
-    this.nodeUrl =
-      process.env.REACT_APP_LISK_NODE_URL || "https://testnet-service.lisk.io";
+    this.nodeUrl = import.meta.env.VITE_LISK_NODE_URL || "https://testnet-service.lisk.io";
   }
 
   /**
@@ -503,4 +502,3 @@ class BlockchainService {
 const blockchainService = new BlockchainService();
 
 export default blockchainService;
-
