@@ -11,8 +11,8 @@ class XellarKitService {
   constructor() {
     this.xellarKit = null;
     this.initialized = false;
-    this.apiKey = process.env.REACT_APP_XELLAR_API_KEY;
-    this.clientId = process.env.REACT_APP_XELLAR_CLIENT_ID;
+    this.apiKey = import.meta.env.VITE_XELLAR_API_KEY;
+    this.clientId = import.meta.env.VITE_XELLAR_CLIENT_ID;
   }
 
   /**
@@ -396,4 +396,3 @@ class XellarKitService {
 const xellarKitService = new XellarKitService();
 
 export default xellarKitService;
-

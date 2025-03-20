@@ -11,9 +11,9 @@ import axios from 'axios';
 
 class IDRXService {
   constructor() {
-    this.apiBaseUrl = process.env.REACT_APP_IDRX_API_URL || 'https://api.idrx.io/v1';
-    this.apiKey = process.env.REACT_APP_IDRX_API_KEY;
-    this.apiSecret = process.env.REACT_APP_IDRX_API_SECRET;
+    this.apiBaseUrl = import.meta.env.VITE_IDRX_API_URL || 'https://api.idrx.io/v1';
+    this.apiKey = import.meta.env.VITE_IDRX_API_KEY;
+    this.apiSecret = import.meta.env.VITE_IDRX_API_SECRET;
     
     this.axiosInstance = axios.create({
       baseURL: this.apiBaseUrl,
