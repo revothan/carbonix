@@ -33,5 +33,9 @@
   "homepage": "https://github.com/revothan/carbonix#readme",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@radix-ui/react-switch": "^1.1.3",
+    "@radix-ui/react-tooltip": "^1.1.8"
   }
 }
