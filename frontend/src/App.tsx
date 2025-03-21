@@ -21,7 +21,7 @@ import CertificateView from './pages/CertificateView';
 import ImpactDashboard from './pages/ImpactDashboard';
 
 // Services
-import xellarKitService from './services/XellarKitService.ts';
+import xellarKitService from './services/XellarKitService';
 import blockchainService from './services/BlockchainService';
 
 // Types
@@ -41,10 +41,16 @@ const AppLayout = ({ user, onLogout, children }) => {
   
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+    if (!sidebarOpen) {
+      document.body.classList.add('sidebar-open');
+    } else {
+      document.body.classList.remove('sidebar-open');
+    }
   };
   
   const closeSidebar = () => {
     setSidebarOpen(false);
+    document.body.classList.remove('sidebar-open');
   };
   
   // Close sidebar on route change
@@ -52,7 +58,7 @@ const AppLayout = ({ user, onLogout, children }) => {
     closeSidebar();
   }, [location.pathname]);
   
-  // Close sidebar when window is resized to desktop width
+  // Handle responsive layout
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 992) {
@@ -99,7 +105,7 @@ const AppLayout = ({ user, onLogout, children }) => {
           {children}
         </main>
         
-        {/* Add overlay when sidebar is open on mobile */}
+        {/* Add overlay when sidebar is open */}
         {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
       </div>
       
