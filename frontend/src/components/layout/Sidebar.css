@@ -1,5 +1,5 @@
 .sidebar {
-  width: 280px;
+  width: 250px;
   height: 100vh;
   background-color: #ffffff;
   position: fixed;
@@ -8,10 +8,9 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border-color, #eaeaea);
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-  z-index: 990;
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.05);
+  z-index: 980;
   transition: transform 0.3s ease;
-  padding-top: 70px; /* Space for navbar */
 }
 
 /* Sidebar toggle button for mobile */
@@ -39,7 +38,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 980;
+  z-index: 979;
 }
 
 /* Close button inside sidebar */
@@ -64,6 +63,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 0;
 }
 
 .user-info {
@@ -195,8 +195,7 @@
 @media screen and (max-width: 992px) {
   .sidebar {
     transform: translateX(-100%);
-    width: 300px;
-    padding-top: 0;
+    width: 280px;
   }
   
   .sidebar.open {
