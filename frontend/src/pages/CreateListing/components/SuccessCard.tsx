@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { CheckCircle } from "lucide-react";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CheckCircle } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -8,20 +8,15 @@ import {
   CardTitle,
   CardDescription,
   CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
-interface CreditType {
-  projectName: string;
-}
+import { Credit, FormValues } from '../types';
+import { formatCurrency } from '@/lib/utils';
 
 interface SuccessCardProps {
-  selectedCredit: CreditType | null;
-  formValues: {
-    quantity: number;
-    pricePerUnit: number | string;
-  };
+  selectedCredit: Credit;
+  formValues: FormValues;
   calculateTotal: () => number;
 }
 
@@ -53,7 +48,7 @@ const SuccessCard: React.FC<SuccessCardProps> = ({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-muted-foreground">Project:</p>
-                <p className="font-medium">{selectedCredit?.projectName}</p>
+                <p className="font-medium">{selectedCredit.projectName}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Quantity:</p>
@@ -64,12 +59,14 @@ const SuccessCard: React.FC<SuccessCardProps> = ({
                   Price Per Tonne:
                 </p>
                 <p className="font-medium">
-                  {formatCurrency(Number(formValues.pricePerUnit))}
+                  {formatCurrency(formValues.pricePerUnit as number)}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Value:</p>
-                <p className="font-medium">{formatCurrency(calculateTotal())}</p>
+                <p className="font-medium">
+                  {formatCurrency(calculateTotal())}
+                </p>
               </div>
             </div>
           </div>
@@ -78,10 +75,10 @@ const SuccessCard: React.FC<SuccessCardProps> = ({
           </p>
         </CardContent>
         <CardFooter className="justify-between flex">
-          <Button variant="outline" onClick={() => navigate("/marketplace")}>
+          <Button variant="outline" onClick={() => navigate('/marketplace')}>
             View Marketplace
           </Button>
-          <Button onClick={() => navigate("/portfolio")}>
+          <Button onClick={() => navigate('/portfolio')}>
             Go to My Portfolio
           </Button>
         </CardFooter>
