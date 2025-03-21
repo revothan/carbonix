@@ -198,6 +198,7 @@
   .sidebar {
     transform: translateX(-100%);
     width: 280px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   }
   
   .sidebar.open {
@@ -209,11 +210,6 @@
   }
   
   .close-sidebar {
-    display: block;
-  }
-  
-  /* When the sidebar is open, ensure main content doesn't overlap with it */
-  .sidebar.open ~ .sidebar-overlay {
     display: block;
   }
 }
