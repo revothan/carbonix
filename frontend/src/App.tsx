@@ -37,6 +37,20 @@ interface User {
 const AppLayout = ({ user, onLogout, children }) => {
   const location = useLocation();
   const isDashboard = location.pathname === '/' && user;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+  
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+  
+  // Close sidebar on route change
+  useEffect(() => {
+    closeSidebar();
+  }, [location.pathname]);
   
   return (
     <>
@@ -44,11 +58,21 @@ const AppLayout = ({ user, onLogout, children }) => {
       {!isDashboard && <Navbar user={user} onLogout={onLogout} />}
       
       <div className="app-container">
-        {user && <Sidebar user={user} />}
+        {user && (
+          <Sidebar 
+            user={user} 
+            isOpen={sidebarOpen} 
+            toggleSidebar={toggleSidebar} 
+            closeSidebar={closeSidebar}
+          />
+        )}
         
-        <main className={isDashboard ? 'main-content dashboard-content' : 'main-content'}>
+        <main className={`main-content ${isDashboard ? 'dashboard-content' : ''} ${sidebarOpen ? 'sidebar-open' : ''}`}>
           {children}
         </main>
+        
+        {/* Add overlay when sidebar is open on mobile */}
+        {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
       </div>
       
       <Footer />
