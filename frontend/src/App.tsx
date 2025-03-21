@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 // Layout components
 import Navbar from './components/layout/Navbar';
@@ -32,6 +32,29 @@ interface User {
   walletAddress?: string;
   [key: string]: any;
 }
+
+// Layout wrapper component to conditionally render navbar
+const AppLayout = ({ user, onLogout, children }) => {
+  const location = useLocation();
+  const isDashboard = location.pathname === '/' && user;
+  
+  return (
+    <>
+      {/* Only show navbar when not on dashboard */}
+      {!isDashboard && <Navbar user={user} onLogout={onLogout} />}
+      
+      <div className="app-container">
+        {user && <Sidebar user={user} />}
+        
+        <main className={isDashboard ? 'main-content dashboard-content' : 'main-content'}>
+          {children}
+        </main>
+      </div>
+      
+      <Footer />
+    </>
+  );
+};
 
 function App() {
   const [initialized, setInitialized] = useState<boolean>(false);
@@ -85,41 +108,37 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <Navbar user={authUser} onLogout={logout} />
-        
-        <div className="app-container">
-          {authUser && <Sidebar user={authUser} />}
-          
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={authUser ? <Dashboard user={authUser} /> : <Login onLogin={login} />} />
-              <Route path="/login" element={<Login onLogin={login} />} />
-              <Route path="/register" element={<Register onRegister={login} />} />
-              
-              {/* Protected routes */}
-              {authUser && (
-                <>
-                  <Route path="/marketplace" element={<Marketplace user={authUser} />} />
-                  <Route path="/credits/:id" element={<CreditDetails user={authUser} />} />
-                  <Route path="/portfolio" element={<MyPortfolio user={authUser} />} />
-                  <Route path="/create-listing" element={<CreateListing user={authUser} />} />
-                  <Route path="/retire" element={<RetireCredits user={authUser} />} />
-                  <Route path="/verification" element={<Verification user={authUser} />} />
-                  <Route path="/wallet" element={<Wallet user={authUser} />} />
-                  <Route path="/impact" element={<ImpactDashboard user={authUser} />} />
-                </>
-              )}
-              
-              {/* Public routes */}
-              <Route path="/certificates/:id" element={<CertificateView />} />
-              
-              {/* Fallback route */}
-              <Route path="*" element={<Login onLogin={login} />} />
-            </Routes>
-          </main>
-        </div>
-        
-        <Footer />
+        <Routes>
+          <Route path="*" element={
+            <AppLayout user={authUser} onLogout={logout}>
+              <Routes>
+                <Route path="/" element={authUser ? <Dashboard user={authUser} /> : <Login onLogin={login} />} />
+                <Route path="/login" element={<Login onLogin={login} />} />
+                <Route path="/register" element={<Register onRegister={login} />} />
+                
+                {/* Protected routes */}
+                {authUser && (
+                  <>
+                    <Route path="/marketplace" element={<Marketplace user={authUser} />} />
+                    <Route path="/credits/:id" element={<CreditDetails user={authUser} />} />
+                    <Route path="/portfolio" element={<MyPortfolio user={authUser} />} />
+                    <Route path="/create-listing" element={<CreateListing user={authUser} />} />
+                    <Route path="/retire" element={<RetireCredits user={authUser} />} />
+                    <Route path="/verification" element={<Verification user={authUser} />} />
+                    <Route path="/wallet" element={<Wallet user={authUser} />} />
+                    <Route path="/impact" element={<ImpactDashboard user={authUser} />} />
+                  </>
+                )}
+                
+                {/* Public routes */}
+                <Route path="/certificates/:id" element={<CertificateView />} />
+                
+                {/* Fallback route */}
+                <Route path="*" element={<Login onLogin={login} />} />
+              </Routes>
+            </AppLayout>
+          } />
+        </Routes>
       </div>
     </Router>
   );
