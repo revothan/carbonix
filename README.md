@@ -97,7 +97,7 @@ The platform is built on four core smart contract components:
 - Generates immutable proof-of-retirement certificates
 - Records beneficiary and purpose information
 
-These contracts work with a React-based frontend, integrated with Xellar Kit for wallet management and IDRX for transactions, all deployed on the Lisk blockchain to leverage its speed, low fees, and growing ecosystem.
+These contracts work with a TypeScript-based React frontend, integrated with Xellar Kit for wallet management and IDRX for transactions, all deployed on the Lisk blockchain to leverage its speed, low fees, and growing ecosystem.
 
 ## Repository Structure
 
@@ -107,7 +107,7 @@ These contracts work with a React-based frontend, integrated with Xellar Kit for
 │   ├── marketplace/      # Marketplace contract implementation
 │   ├── verification/     # Verification contract implementation
 │   └── retirement/       # Retirement contract implementation
-├── frontend/             # React-based user interface
+├── frontend/             # TypeScript React-based user interface
 │   ├── public/           # Public assets
 │   └── src/              # Source code
 │       ├── components/   # Reusable UI components
@@ -212,11 +212,26 @@ npm run build
 
 - **Blockchain**: Lisk SDK for core infrastructure
 - **Smart Contracts**: JavaScript-based custom modules
-- **Frontend**: React with TailwindCSS
+- **Frontend**: TypeScript React with TailwindCSS
 - **Wallet Integration**: Xellar Kit SDK
 - **Payment Integration**: IDRX Stablecoin API
 - **Analytics**: Custom dashboards with Recharts
 - **Authentication**: OAuth and blockchain wallet-based auth
+
+## TypeScript Migration
+
+The frontend has been fully migrated from JavaScript to TypeScript to improve code quality, maintainability, and developer experience. Key benefits include:
+
+- **Type Safety**: Strong static typing reduces runtime errors and improves code reliability
+- **Enhanced IDE Support**: Better autocomplete, navigation, and refactoring capabilities
+- **Improved Documentation**: Types serve as built-in documentation for component props and API interfaces
+- **Better Scalability**: Makes the codebase more maintainable as the project grows
+
+The migration involved:
+- Converting all JSX components to TSX
+- Adding proper type definitions for all component props
+- Creating interfaces for service responses and requests
+- Adding comprehensive type coverage for integration with external services
 
 ## Contributing
 
