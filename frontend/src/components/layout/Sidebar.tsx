@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
@@ -11,6 +11,9 @@ interface User {
 
 interface SidebarProps {
   user: User;
+  isOpen: boolean;
+  toggleSidebar: () => void;
+  closeSidebar: () => void;
 }
 
 // Navigation menu items with icons
@@ -102,16 +105,11 @@ const menuItems = [
   }
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ user }) => {
+const Sidebar: React.FC<SidebarProps> = ({ user, isOpen, toggleSidebar, closeSidebar }) => {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
   
   const isActive = (path: string): boolean => {
     return location.pathname === path;
-  };
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
   };
 
   return (
@@ -140,7 +138,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
             </div>
           </div>
           
-          <button className="close-sidebar" onClick={toggleSidebar}>
+          <button className="close-sidebar" onClick={closeSidebar}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
@@ -152,7 +150,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
           <ul className="nav-list">
             {menuItems.map((item) => (
               <li key={item.path} className={`nav-item ${isActive(item.path) ? 'active' : ''}`}>
-                <Link to={item.path} className="nav-link" onClick={() => setIsOpen(false)}>
+                <Link to={item.path} className="nav-link" onClick={closeSidebar}>
                   <span className="nav-icon">{item.icon}</span>
                   <span className="nav-label">{item.label}</span>
                 </Link>
@@ -162,7 +160,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
         </nav>
         
         <div className="sidebar-footer">
-          <Link to="/settings" className="settings-link" onClick={() => setIsOpen(false)}>
+          <Link to="/settings" className="settings-link" onClick={closeSidebar}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -171,8 +169,6 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
           </Link>
         </div>
       </aside>
-      
-      {isOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
     </>
   );
 };
