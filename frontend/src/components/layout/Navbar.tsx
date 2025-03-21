@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './Navbar.css';
 
 interface User {
   displayName?: string;
@@ -14,16 +15,39 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
+  const profileRef = useRef<HTMLLIElement>(null);
   const navigate = useNavigate();
 
   const toggleMenu = (): void => {
     setIsMenuOpen(!isMenuOpen);
+    if (isProfileOpen) setIsProfileOpen(false);
+  };
+
+  const toggleProfile = (): void => {
+    setIsProfileOpen(!isProfileOpen);
   };
 
   const handleLogout = (): void => {
     onLogout();
+    setIsMenuOpen(false);
+    setIsProfileOpen(false);
     navigate('/login');
   };
+
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="navbar">
@@ -57,7 +81,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
               </li>
               <li className="nav-item">
                 <Link to="/impact" className="nav-links" onClick={() => setIsMenuOpen(false)}>
-                  Impact Dashboard
+                  Impact
                 </Link>
               </li>
               <li className="nav-item">
@@ -65,20 +89,26 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
                   Wallet
                 </Link>
               </li>
-              <li className="nav-item user-profile">
+              <li 
+                className={`nav-item user-profile ${isProfileOpen ? 'active' : ''}`} 
+                onClick={toggleProfile}
+                ref={profileRef}
+              >
                 <div className="user-avatar">
                   {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
                 </div>
-                <div className="dropdown-content">
+                <div className={`dropdown-content ${isProfileOpen ? 'show' : ''}`}>
                   <div className="user-info">
                     <span className="user-name">{user.displayName || 'User'}</span>
-                    <span className="user-address">{user.walletAddress ? `${user.walletAddress.substring(0, 8)}...` : 'No wallet'}</span>
+                    <span className="user-address">
+                      {user.walletAddress ? `${user.walletAddress.substring(0, 8)}...` : 'No wallet'}
+                    </span>
                   </div>
                   <div className="dropdown-divider"></div>
-                  <Link to="/profile" className="dropdown-item" onClick={() => setIsMenuOpen(false)}>
+                  <Link to="/profile" className="dropdown-item" onClick={() => { setIsMenuOpen(false); setIsProfileOpen(false); }}>
                     Profile
                   </Link>
-                  <Link to="/settings" className="dropdown-item" onClick={() => setIsMenuOpen(false)}>
+                  <Link to="/settings" className="dropdown-item" onClick={() => { setIsMenuOpen(false); setIsProfileOpen(false); }}>
                     Settings
                   </Link>
                   <div className="dropdown-divider"></div>
