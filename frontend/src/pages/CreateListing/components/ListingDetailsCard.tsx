@@ -1,68 +1,42 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Switch } from "@/components/ui/switch";
+} from '@/components/ui/tooltip';
 
-interface CreditType {
-  id: string;
-  projectName: string;
-  projectType: string;
-  standard: string;
-  vintage: number;
-  quantity: number;
-  availableQuantity: number;
-  imageUrl: string;
-  color: string;
-}
-
-interface FormValuesType {
-  quantity: number;
-  pricePerUnit: number | string;
-  expiresAt: string;
-  description: string;
-  allowPartialSales: boolean;
-  minPurchaseQuantity: number;
-  immediateSettlement: boolean;
-}
-
-interface FormErrorsType {
-  quantity?: string;
-  pricePerUnit?: string;
-  minPurchaseQuantity?: string;
-}
+import { Credit, FormErrors, FormValues } from '../types';
 
 interface ListingDetailsCardProps {
-  selectedCredit: CreditType;
-  formValues: FormValuesType;
-  formErrors: FormErrorsType;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onSwitchChange: (name: string, checked: boolean) => void;
-  setMaxQuantity: () => void;
+  selectedCredit: Credit;
+  formValues: FormValues;
+  formErrors: FormErrors;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleSwitchChange: (name: string, checked: boolean) => void;
+  setFormValues: React.Dispatch<React.SetStateAction<FormValues>>;
 }
 
 const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
   selectedCredit,
   formValues,
   formErrors,
-  onInputChange,
-  onSwitchChange,
-  setMaxQuantity,
+  handleInputChange,
+  handleSwitchChange,
+  setFormValues,
 }) => {
   return (
     <Card>
@@ -84,23 +58,32 @@ const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
                 name="quantity"
                 type="number"
                 value={formValues.quantity}
-                onChange={onInputChange}
+                onChange={handleInputChange}
                 min="1"
                 max={selectedCredit.availableQuantity}
-                className={formErrors.quantity ? "border-destructive" : ""}
+                className={
+                  formErrors.quantity ? 'border-destructive' : ''
+                }
               />
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 className="ml-2"
-                onClick={setMaxQuantity}
+                onClick={() =>
+                  setFormValues((prev) => ({
+                    ...prev,
+                    quantity: selectedCredit.availableQuantity,
+                  }))
+                }
               >
                 Max
               </Button>
             </div>
             {formErrors.quantity && (
-              <p className="text-sm text-destructive">{formErrors.quantity}</p>
+              <p className="text-sm text-destructive">
+                {formErrors.quantity}
+              </p>
             )}
             <p className="text-xs text-muted-foreground">
               Available: {selectedCredit.availableQuantity} tonnes
@@ -121,11 +104,9 @@ const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
                 type="number"
                 placeholder="Enter price per tonne"
                 value={formValues.pricePerUnit}
-                onChange={onInputChange}
+                onChange={handleInputChange}
                 min="1000"
-                className={`pl-8 ${
-                  formErrors.pricePerUnit ? "border-destructive" : ""
-                }`}
+                className={`pl-8 ${formErrors.pricePerUnit ? 'border-destructive' : ''}`}
               />
             </div>
             {formErrors.pricePerUnit && (
@@ -146,8 +127,8 @@ const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
             name="expiresAt"
             type="date"
             value={formValues.expiresAt}
-            onChange={onInputChange}
-            min={new Date().toISOString().split("T")[0]}
+            onChange={handleInputChange}
+            min={new Date().toISOString().split('T')[0]}
           />
           <p className="text-xs text-muted-foreground">
             If not specified, the listing will expire in 30 days
@@ -175,14 +156,14 @@ const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
                     id="allowPartialSales"
                     checked={formValues.allowPartialSales}
                     onCheckedChange={(checked) =>
-                      onSwitchChange("allowPartialSales", checked)
+                      handleSwitchChange('allowPartialSales', checked)
                     }
                   />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
-                    When enabled, buyers can purchase a fraction of your total
-                    listing.
+                    When enabled, buyers can purchase a fraction of your
+                    total listing.
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -199,11 +180,13 @@ const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
                 name="minPurchaseQuantity"
                 type="number"
                 value={formValues.minPurchaseQuantity}
-                onChange={onInputChange}
+                onChange={handleInputChange}
                 min="1"
                 max={formValues.quantity}
                 className={
-                  formErrors.minPurchaseQuantity ? "border-destructive" : ""
+                  formErrors.minPurchaseQuantity
+                    ? 'border-destructive'
+                    : ''
                 }
               />
               {formErrors.minPurchaseQuantity && (
@@ -212,14 +195,18 @@ const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
                 </p>
               )}
               <p className="text-xs text-muted-foreground">
-                Minimum amount a buyer must purchase in a single transaction
+                Minimum amount a buyer must purchase in a single
+                transaction
               </p>
             </div>
           )}
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="immediateSettlement" className="text-base">
+              <Label
+                htmlFor="immediateSettlement"
+                className="text-base"
+              >
                 Immediate Settlement
               </Label>
               <p className="text-sm text-muted-foreground">
@@ -233,14 +220,14 @@ const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
                     id="immediateSettlement"
                     checked={formValues.immediateSettlement}
                     onCheckedChange={(checked) =>
-                      onSwitchChange("immediateSettlement", checked)
+                      handleSwitchChange('immediateSettlement', checked)
                     }
                   />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
-                    When enabled, funds and credits transfer immediately upon
-                    purchase.
+                    When enabled, funds and credits transfer immediately
+                    upon purchase.
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -258,7 +245,7 @@ const ListingDetailsCard: React.FC<ListingDetailsCardProps> = ({
             id="description"
             name="description"
             value={formValues.description}
-            onChange={onInputChange}
+            onChange={handleInputChange}
             placeholder="Add any additional details about your listing..."
             rows={4}
           />
