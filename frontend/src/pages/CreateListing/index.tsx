@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { ArrowLeft, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-
+// Components
 import {
   CreditSelectionCard,
   ListingDetailsCard,
   ListingSummaryCard,
   SuccessCard,
-} from "./components";
-import { CreditType, FormValuesType, FormErrorsType, CreateListingProps } from "./types";
+} from './components';
+
+// Types
+import { Credit, FormValues, FormErrors, CreateListingProps } from './types';
+
+// Services
+import blockchainService from '@/services/BlockchainService';
 
 // Custom hook to get query parameters
 const useQuery = () => {
@@ -21,24 +26,24 @@ const useQuery = () => {
 const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
   const query = useQuery();
   const navigate = useNavigate();
-  const creditId = query.get("creditId");
+  const creditId = query.get('creditId');
 
   // States
-  const [availableCredits, setAvailableCredits] = useState<CreditType[]>([]);
-  const [selectedCredit, setSelectedCredit] = useState<CreditType | null>(null);
+  const [availableCredits, setAvailableCredits] = useState<Credit[]>([]);
+  const [selectedCredit, setSelectedCredit] = useState<Credit | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchingCredits, setFetchingCredits] = useState<boolean>(false);
-  const [formValues, setFormValues] = useState<FormValuesType>({
-    creditId: "",
+  const [formValues, setFormValues] = useState<FormValues>({
+    creditId: '',
     quantity: 1,
-    pricePerUnit: "",
-    expiresAt: "",
-    description: "",
+    pricePerUnit: '',
+    expiresAt: '',
+    description: '',
     allowPartialSales: true,
     minPurchaseQuantity: 1,
     immediateSettlement: true,
   });
-  const [formErrors, setFormErrors] = useState<FormErrorsType>({});
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -46,7 +51,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
   const getDefaultExpirationDate = (): string => {
     const date = new Date();
     date.setDate(date.getDate() + 30);
-    return date.toISOString().split("T")[0];
+    return date.toISOString().split('T')[0];
   };
 
   useEffect(() => {
@@ -58,42 +63,42 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
         // const credits = await blockchainService.getAllCredits({ owner: user.walletAddress, status: "active" });
 
         // Mock data for now
-        const mockCredits: CreditType[] = [
+        const mockCredits: Credit[] = [
           {
-            id: "credit-001",
-            projectName: "Sumatra Forest Conservation",
-            projectType: "forest_conservation",
-            standard: "VCS",
+            id: 'credit-001',
+            projectName: 'Sumatra Forest Conservation',
+            projectType: 'forest_conservation',
+            standard: 'VCS',
             vintage: 2023,
             quantity: 25,
             availableQuantity: 25,
             imageUrl:
-              "https://placehold.co/800x400/2e7d32/FFFFFF?text=Forest+Conservation",
-            color: "#2e7d32",
+              'https://placehold.co/800x400/2e7d32/FFFFFF?text=Forest+Conservation',
+            color: '#2e7d32',
           },
           {
-            id: "credit-002",
-            projectName: "Java Solar Farm",
-            projectType: "renewable_energy",
-            standard: "Gold Standard",
+            id: 'credit-002',
+            projectName: 'Java Solar Farm',
+            projectType: 'renewable_energy',
+            standard: 'Gold Standard',
             vintage: 2022,
             quantity: 10,
             availableQuantity: 10,
             imageUrl:
-              "https://placehold.co/800x400/ff9800/FFFFFF?text=Solar+Energy",
-            color: "#ff9800",
+              'https://placehold.co/800x400/ff9800/FFFFFF?text=Solar+Energy',
+            color: '#ff9800',
           },
           {
-            id: "credit-003",
-            projectName: "Bali Mangrove Restoration",
-            projectType: "blue_carbon",
-            standard: "VCS",
+            id: 'credit-003',
+            projectName: 'Bali Mangrove Restoration',
+            projectType: 'blue_carbon',
+            standard: 'VCS',
             vintage: 2023,
             quantity: 15,
             availableQuantity: 15,
             imageUrl:
-              "https://placehold.co/800x400/0288d1/FFFFFF?text=Mangrove+Restoration",
-            color: "#0288d1",
+              'https://placehold.co/800x400/0288d1/FFFFFF?text=Mangrove+Restoration',
+            color: '#0288d1',
           },
         ];
 
@@ -107,7 +112,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
           }
         }
       } catch (error) {
-        console.error("Error fetching available credits:", error);
+        console.error('Error fetching available credits:', error);
       } finally {
         setFetchingCredits(false);
         setLoading(false);
@@ -117,7 +122,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
     fetchCredits();
   }, [creditId, user.walletAddress]);
 
-  const selectCredit = (credit: CreditType): void => {
+  const selectCredit = (credit: Credit) => {
     setSelectedCredit(credit);
     setFormValues((prev) => ({
       ...prev,
@@ -127,18 +132,19 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
     }));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
+    const isCheckbox = type === 'checkbox';
+    const checked = isCheckbox ? (e.target as HTMLInputElement).checked : false;
 
-    if (type === "checkbox") {
+    if (isCheckbox) {
       setFormValues((prev) => ({
         ...prev,
         [name]: checked,
       }));
 
       // Reset minPurchaseQuantity if partial sales is disabled
-      if (name === "allowPartialSales" && !checked) {
+      if (name === 'allowPartialSales' && !checked) {
         setFormValues((prev) => ({
           ...prev,
           minPurchaseQuantity: prev.quantity,
@@ -148,22 +154,22 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
       setFormValues((prev) => ({
         ...prev,
         [name]:
-          name === "quantity" ||
-          name === "pricePerUnit" ||
-          name === "minPurchaseQuantity"
-            ? parseInt(value) || ""
+          name === 'quantity' ||
+          name === 'pricePerUnit' ||
+          name === 'minPurchaseQuantity'
+            ? parseInt(value) || ''
             : value,
       }));
     }
   };
 
-  const handleSelectChange = (name: string, value: string): void => {
+  const handleSelectChange = (name: string, value: string) => {
     setFormValues((prev) => ({
       ...prev,
       [name]: value,
     }));
 
-    if (name === "creditId") {
+    if (name === 'creditId') {
       const credit = availableCredits.find((c) => c.id === value);
       if (credit) {
         selectCredit(credit);
@@ -173,14 +179,14 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
     }
   };
 
-  const handleSwitchChange = (name: string, checked: boolean): void => {
+  const handleSwitchChange = (name: string, checked: boolean) => {
     setFormValues((prev) => ({
       ...prev,
       [name]: checked,
     }));
 
     // Reset minPurchaseQuantity if partial sales is disabled
-    if (name === "allowPartialSales" && !checked) {
+    if (name === 'allowPartialSales' && !checked) {
       setFormValues((prev) => ({
         ...prev,
         minPurchaseQuantity: prev.quantity,
@@ -189,14 +195,14 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
   };
 
   const validateForm = (): boolean => {
-    const errors: FormErrorsType = {};
+    const errors: FormErrors = {};
 
     if (!formValues.creditId) {
-      errors.creditId = "Please select a carbon credit to list";
+      errors.creditId = 'Please select a carbon credit to list';
     }
 
     if (!formValues.quantity || formValues.quantity <= 0) {
-      errors.quantity = "Please enter a valid quantity";
+      errors.quantity = 'Please enter a valid quantity';
     } else if (
       selectedCredit &&
       formValues.quantity > selectedCredit.availableQuantity
@@ -205,9 +211,9 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
     }
 
     if (!formValues.pricePerUnit || Number(formValues.pricePerUnit) <= 0) {
-      errors.pricePerUnit = "Please enter a valid price per unit";
+      errors.pricePerUnit = 'Please enter a valid price per unit';
     } else if (Number(formValues.pricePerUnit) < 1000) {
-      errors.pricePerUnit = "Minimum price is Rp 1,000 per tonne";
+      errors.pricePerUnit = 'Minimum price is Rp 1,000 per tonne';
     }
 
     if (
@@ -215,20 +221,20 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
       (!formValues.minPurchaseQuantity || formValues.minPurchaseQuantity <= 0)
     ) {
       errors.minPurchaseQuantity =
-        "Minimum purchase quantity must be at least 1";
+        'Minimum purchase quantity must be at least 1';
     } else if (
       formValues.allowPartialSales &&
       formValues.minPurchaseQuantity > formValues.quantity
     ) {
       errors.minPurchaseQuantity =
-        "Minimum purchase quantity cannot exceed total quantity";
+        'Minimum purchase quantity cannot exceed total quantity';
     }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -244,7 +250,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
       //   data: formValues
       // }, user.walletId);
 
-      console.log("Creating listing with values:", formValues);
+      console.log('Creating listing with values:', formValues);
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -254,13 +260,13 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
 
       // Automatically redirect after 3 seconds
       setTimeout(() => {
-        navigate("/portfolio");
+        navigate('/portfolio');
       }, 3000);
     } catch (error) {
-      console.error("Error creating listing:", error);
+      console.error('Error creating listing:', error);
       setFormErrors((prev) => ({
         ...prev,
-        submit: "Error creating listing. Please try again.",
+        submit: 'Error creating listing. Please try again.',
       }));
     } finally {
       setSubmitting(false);
@@ -282,15 +288,6 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
     return calculateTotal() - getPlatformFee();
   };
 
-  const setMaxQuantity = (): void => {
-    if (selectedCredit) {
-      setFormValues((prev) => ({
-        ...prev,
-        quantity: selectedCredit.availableQuantity,
-      }));
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -300,7 +297,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
   }
 
   // Success state
-  if (success) {
+  if (success && selectedCredit) {
     return (
       <SuccessCard
         selectedCredit={selectedCredit}
@@ -342,7 +339,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
             formValues={formValues}
             formErrors={formErrors}
             fetchingCredits={fetchingCredits}
-            onSelectCredit={(value) => handleSelectChange("creditId", value)}
+            handleSelectChange={handleSelectChange}
           />
 
           {/* Listing Details Card */}
@@ -351,9 +348,9 @@ const CreateListing: React.FC<CreateListingProps> = ({ user }) => {
               selectedCredit={selectedCredit}
               formValues={formValues}
               formErrors={formErrors}
-              onInputChange={handleInputChange}
-              onSwitchChange={handleSwitchChange}
-              setMaxQuantity={setMaxQuantity}
+              handleInputChange={handleInputChange}
+              handleSwitchChange={handleSwitchChange}
+              setFormValues={setFormValues}
             />
           )}
 
