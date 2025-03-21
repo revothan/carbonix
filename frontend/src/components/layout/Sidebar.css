@@ -11,6 +11,8 @@
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.05);
   z-index: 980;
   transition: transform 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Sidebar toggle button for mobile */
