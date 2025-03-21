@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '@/lib/utils';
 import { BarChart, LineChart, CircleDollarSign, Leaf, TrendingUp } from 'lucide-react';
+import { User, Transaction } from '@/lib/types';
 
 import {
   Card,
@@ -14,22 +15,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
-interface User {
-  id: string;
-  displayName?: string;
-  email?: string;
-  walletAddress?: string;
-  [key: string]: any;
-}
-
-interface Transaction {
-  id: string;
-  type: 'purchase' | 'listing' | 'retirement' | string;
-  amount: number;
-  date: string;
-  status: 'complete' | 'active' | 'pending' | string;
-}
 
 interface DashboardStats {
   totalCredits: number;
