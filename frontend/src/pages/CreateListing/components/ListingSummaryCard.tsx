@@ -1,33 +1,20 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
-interface CreditType {
-  id: string;
-  projectName: string;
-  projectType: string;
-  standard: string;
-  vintage: number;
-  quantity: number;
-  availableQuantity: number;
-  imageUrl: string;
-  color: string;
-}
+import { Credit, FormValues } from '../types';
+import { formatCurrency } from '@/lib/utils';
 
 interface ListingSummaryCardProps {
-  selectedCredit: CreditType;
-  formValues: {
-    quantity: number;
-    pricePerUnit: number | string;
-  };
+  selectedCredit: Credit;
+  formValues: FormValues;
   submitting: boolean;
   calculateTotal: () => number;
   getPlatformFee: () => number;
@@ -62,7 +49,7 @@ const ListingSummaryCard: React.FC<ListingSummaryCardProps> = ({
           <div className="flex justify-between py-2 border-b">
             <dt className="text-muted-foreground">Price per Tonne:</dt>
             <dd className="font-medium">
-              {formatCurrency(Number(formValues.pricePerUnit))}
+              {formatCurrency(formValues.pricePerUnit as number)}
             </dd>
           </div>
           <div className="flex justify-between py-2 border-b">
@@ -83,12 +70,12 @@ const ListingSummaryCard: React.FC<ListingSummaryCardProps> = ({
         <Button
           type="button"
           variant="outline"
-          onClick={() => navigate("/portfolio")}
+          onClick={() => navigate('/portfolio')}
         >
           Cancel
         </Button>
         <Button type="submit" disabled={submitting}>
-          {submitting ? "Creating Listing..." : "Create Listing"}
+          {submitting ? 'Creating Listing...' : 'Create Listing'}
         </Button>
       </CardFooter>
     </Card>
