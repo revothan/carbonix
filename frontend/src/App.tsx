@@ -21,7 +21,7 @@ import CertificateView from './pages/CertificateView';
 import ImpactDashboard from './pages/ImpactDashboard';
 
 // Services
-import xellarKitService from './services/XellarKitService';
+import xellarKitService from './services/XellarKitService.ts';
 import blockchainService from './services/BlockchainService';
 
 // Types
