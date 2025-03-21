@@ -36,6 +36,15 @@ body {
   overflow-x: hidden;
 }
 
+/* Body classes for sidebar layout control */
+body.has-sidebar {
+  padding-left: 0;
+}
+
+body.sidebar-open {
+  overflow: hidden;
+}
+
 .app {
   display: flex;
   flex-direction: column;
@@ -55,14 +64,9 @@ body {
   padding: 24px;
   margin-left: var(--sidebar-width);
   min-height: calc(100vh - 70px); /* Account for footer height */
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s ease, width 0.3s ease;
   width: calc(100% - var(--sidebar-width));
   position: relative;
-  left: 0;
-}
-
-.main-content.sidebar-open {
-  width: calc(100% - var(--sidebar-width));
   left: 0;
 }
 
@@ -359,6 +363,12 @@ p {
   padding-left: 15px;
 }
 
+/* Sidebar-specific styles */
+.main-content.sidebar-open {
+  /* When sidebar is open in desktop, ensure content doesn't overlap */
+  margin-left: var(--sidebar-width);
+}
+
 /* Responsive breakpoints */
 @media (max-width: 992px) {
   .main-content {
@@ -378,12 +388,9 @@ p {
   }
   
   /* Add padding to content when sidebar is shown on mobile */
-  .sidebar.open ~ .main-content {
-    margin-left: 0;
-    overflow: hidden;
-  }
-  
   .main-content.sidebar-open {
+    margin-left: 0;
     width: 100%;
+    overflow: hidden;
   }
 }
