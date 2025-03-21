@@ -44,6 +44,7 @@ body {
 .app-container {
   display: flex;
   flex: 1;
+  position: relative;
 }
 
 .main-content {
@@ -51,6 +52,7 @@ body {
   padding: 24px;
   margin-left: var(--sidebar-width);
   min-height: calc(100vh - 70px); /* Account for footer height */
+  transition: margin-left 0.3s ease;
 }
 
 .dashboard-content {
@@ -351,13 +353,21 @@ p {
   .main-content {
     margin-left: 0;
     padding: 16px;
+    /* Add top padding to account for the sidebar toggle button */
+    padding-top: 60px;
   }
   
   .dashboard-content {
-    padding-top: 16px;
+    padding-top: 60px;
   }
   
   .footer {
     margin-left: 0;
+  }
+  
+  /* Add padding to content when sidebar is shown on mobile */
+  .sidebar.open ~ .main-content {
+    margin-left: 0;
+    overflow: hidden;
   }
 }
