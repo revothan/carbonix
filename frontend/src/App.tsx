@@ -52,6 +52,32 @@ const AppLayout = ({ user, onLogout, children }) => {
     closeSidebar();
   }, [location.pathname]);
   
+  // Close sidebar when window is resized to desktop width
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 992) {
+        // In desktop mode, keep sidebar visible but make sure content is properly laid out
+        if (user) {
+          document.body.classList.add('has-sidebar');
+        }
+      } else {
+        document.body.classList.remove('has-sidebar');
+        if (sidebarOpen) {
+          document.body.classList.add('sidebar-open');
+        } else {
+          document.body.classList.remove('sidebar-open');
+        }
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial call
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [sidebarOpen, user]);
+  
   return (
     <>
       {/* Only show navbar when not on dashboard */}
@@ -67,7 +93,9 @@ const AppLayout = ({ user, onLogout, children }) => {
           />
         )}
         
-        <main className={`main-content ${isDashboard ? 'dashboard-content' : ''} ${sidebarOpen ? 'sidebar-open' : ''}`}>
+        <main 
+          className={`main-content ${isDashboard ? 'dashboard-content' : ''} ${sidebarOpen ? 'sidebar-open' : ''}`}
+        >
           {children}
         </main>
         
@@ -118,6 +146,8 @@ function App() {
   const logout = () => {
     setAuthUser(null);
     localStorage.removeItem('carbonix_user');
+    document.body.classList.remove('has-sidebar');
+    document.body.classList.remove('sidebar-open');
   };
 
   if (loading) {
