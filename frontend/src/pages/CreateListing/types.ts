@@ -1,4 +1,4 @@
-export interface CreditType {
+export interface Credit {
   id: string;
   projectName: string;
   projectType: string;
@@ -10,7 +10,7 @@ export interface CreditType {
   color: string;
 }
 
-export interface FormValuesType {
+export interface FormValues {
   creditId: string;
   quantity: number;
   pricePerUnit: number | string;
@@ -21,7 +21,7 @@ export interface FormValuesType {
   immediateSettlement: boolean;
 }
 
-export interface FormErrorsType {
+export interface FormErrors {
   creditId?: string;
   quantity?: string;
   pricePerUnit?: string;
@@ -30,11 +30,11 @@ export interface FormErrorsType {
   [key: string]: string | undefined;
 }
 
-export interface UserType {
+export interface User {
   walletAddress: string;
-  [key: string]: any;
+  walletId?: string;
 }
 
 export interface CreateListingProps {
-  user: UserType;
+  user: User;
 }
