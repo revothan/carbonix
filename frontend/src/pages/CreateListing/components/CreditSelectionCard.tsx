@@ -1,47 +1,34 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Leaf } from "lucide-react";
+import React from 'react';
+import { Leaf } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
-interface CreditType {
-  id: string;
-  projectName: string;
-  projectType: string;
-  standard: string;
-  vintage: number;
-  quantity: number;
-  availableQuantity: number;
-  imageUrl: string;
-  color: string;
-}
+import { Credit, FormErrors, FormValues } from '../types';
 
 interface CreditSelectionCardProps {
-  availableCredits: CreditType[];
-  selectedCredit: CreditType | null;
-  formValues: {
-    creditId: string;
-  };
-  formErrors: {
-    creditId?: string;
-  };
+  availableCredits: Credit[];
+  selectedCredit: Credit | null;
+  formValues: FormValues;
+  formErrors: FormErrors;
   fetchingCredits: boolean;
-  onSelectCredit: (creditId: string) => void;
+  handleSelectChange: (name: string, value: string) => void;
 }
 
 const CreditSelectionCard: React.FC<CreditSelectionCardProps> = ({
@@ -50,7 +37,7 @@ const CreditSelectionCard: React.FC<CreditSelectionCardProps> = ({
   formValues,
   formErrors,
   fetchingCredits,
-  onSelectCredit,
+  handleSelectChange,
 }) => {
   const navigate = useNavigate();
 
@@ -72,11 +59,11 @@ const CreditSelectionCard: React.FC<CreditSelectionCardProps> = ({
                 </Label>
                 <Select
                   value={formValues.creditId}
-                  onValueChange={(value) => onSelectCredit(value)}
+                  onValueChange={(value) => handleSelectChange('creditId', value)}
                 >
                   <SelectTrigger
                     id="creditId"
-                    className={formErrors.creditId ? "border-destructive" : ""}
+                    className={formErrors.creditId ? 'border-destructive' : ''}
                   >
                     <SelectValue placeholder="Select a carbon credit" />
                   </SelectTrigger>
@@ -105,19 +92,15 @@ const CreditSelectionCard: React.FC<CreditSelectionCardProps> = ({
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.onerror = null;
-                        if (target.parentNode) {
-                          (target.parentNode as HTMLElement).style.backgroundColor =
-                            selectedCredit.color || "#2e7d32";
+                        const parent = target.parentNode as HTMLElement;
+                        if (parent) {
+                          parent.style.backgroundColor = selectedCredit.color || '#2e7d32';
                         }
-                        target.style.display = "none";
-                        const icon = document.createElement("div");
-                        icon.className =
-                          "absolute inset-0 flex items-center justify-center";
-                        icon.innerHTML =
-                          '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-leaf"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>';
-                        if (target.parentNode) {
-                          target.parentNode.appendChild(icon);
-                        }
+                        target.style.display = 'none';
+                        const icon = document.createElement('div');
+                        icon.className = 'absolute inset-0 flex items-center justify-center';
+                        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-leaf"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>';
+                        parent?.appendChild(icon);
                       }}
                     />
                   </div>
@@ -125,12 +108,12 @@ const CreditSelectionCard: React.FC<CreditSelectionCardProps> = ({
                     <div className="flex gap-2 mb-2">
                       <Badge variant="secondary">
                         {selectedCredit.projectType
-                          .split("_")
+                          .split('_')
                           .map(
                             (word) =>
                               word.charAt(0).toUpperCase() + word.slice(1)
                           )
-                          .join(" ")}
+                          .join(' ')}
                       </Badge>
                       <Badge variant="outline">{selectedCredit.standard}</Badge>
                       <Badge variant="outline">
@@ -159,7 +142,7 @@ const CreditSelectionCard: React.FC<CreditSelectionCardProps> = ({
                 You don't have any carbon credits to list. Purchase credits from
                 the marketplace first.
               </p>
-              <Button className="mt-4" onClick={() => navigate("/marketplace")}>
+              <Button className="mt-4" onClick={() => navigate('/marketplace')}>
                 Browse Marketplace
               </Button>
             </div>
