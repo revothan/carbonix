@@ -209,4 +209,9 @@
   .close-sidebar {
     display: block;
   }
+  
+  /* When the sidebar is open, ensure main content doesn't overlap with it */
+  .sidebar.open ~ .sidebar-overlay {
+    display: block;
+  }
 }
